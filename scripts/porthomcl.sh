@@ -61,4 +61,4 @@ cat $sample_name/7.paralogs/*.tsv >> $sample_name/8.all.par.tsv
 mcl $sample_name/8.all.par.tsv  --abc -I $inflation -t 4 -o $sample_name/8.all.par.group
 
 # add orphans
-python scripts add_orphans.py $sample_name/0.input_faa*.faa $sample_name/8.all.par.group
+python /groups/itay_mayrose/galtoledano/gene_families/scripts/add_orphans.py $sample_name/0.input_faa/*.faa $sample_name/8.all.par.group

@@ -8,8 +8,8 @@ def edit_families_file(families_file, output_path):
             genes = line.strip().split('\t')
             for field in genes:
                 gene_name = field.split('|')[-1]
-                outfile.write(f'{gene_name}\t')
-            outfile.write(f'\n')
+                outfile.write(f"{gene_name}\t")
+            outfile.write("\n")
 
 
 def extract_original_gene_names(fasta_file):
@@ -34,16 +34,14 @@ def extract_families_gene_names(file_path):
 def add_orphans(original_file, families_file):
     output_path = os.path.dirname(families_file) + os.path.sep + "genes_families.tsv"
     edit_families_file(families_file, output_path)
-    print("edited")
     original_gene_names = extract_original_gene_names(original_file)
     families_gene_names = extract_families_gene_names(output_path)
     orphans= original_gene_names ^ families_gene_names
     with open(output_path, "a") as f:
         for gene in orphans:
             f.write(gene + "\n")
-    print(f"original: {len(original_gene_names)}, in families: {len(families_gene_names)}, missing: {len(orphans)}")
 
 if __name__ == "__main__":
-    original_file = "arabidopsis/0.input_faa/proteome_ath_longest.faa"
-    families_file = "arabidopsis/8.all.par.group"
+    original_file = sys.argv[1]
+    families_file = sys.argv[2]
     add_orphans(original_file, families_file)

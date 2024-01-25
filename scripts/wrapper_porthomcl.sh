@@ -9,10 +9,10 @@
 #PBS -p 3
 #PBS -l select=1:ncpus=16
 
-# source ~/.bashrc
-# hostname
-# conda activate 
-# export PATH=$CONDA_PREFIX/bin:$PATH
+source ~/.bashrc
+hostname
+conda activate PorthoMCL
+export PATH=$CONDA_PREFIX/bin:$PATH
 
 cd /groups/itay_mayrose/galtoledano/gene_families/
 
