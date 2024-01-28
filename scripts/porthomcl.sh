@@ -14,6 +14,9 @@ sample_name=$2
 inflation=$3
 cpus=16
 
+strand=$(basename $sample_name/0.input_faa/*)
+strand="${strand%.*}" #
+
 #1-2
 $portho_location/porthomcl.sh -e 2 $sample_name
 
@@ -25,15 +28,15 @@ mkdir $sample_name/3.blastquery
 $portho_location/porthomclSplitFasta.py -i $sample_name/2.filteredFasta/goodProteins.fasta  -o $sample_name/3.blastquery 
 cd $sample_name
 mkdir 3.blastres 
-blastp -query 3.blastquery/*.fasta -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000 -evalue 1e-5 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen" -num_threads $cpus -out 3.blastres/proteome_ath_longest.tab
+blastp -query 3.blastquery/*.fasta -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000 -evalue 1e-5 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen" -num_threads $cpus -out 3.blastres/$strand.tab
 cd ../..
 
 #normalize_score
-#python normelize_score.py $sample_name/3.blastres/proteome_ath_longest1.tab $sample_name/3.blastres/proteome_ath_longest.tab
+#python normelize_score.py $sample_name/3.blastres/$strand1.tab $sample_name/3.blastres/$strand.tab
 
 #4
 mkdir $sample_name/4.splitSimSeq
-$portho_location/porthomclBlastParser $sample_name/3.blastres/proteome_ath_longest.tab $sample_name/1.compliantFasta >> $sample_name/4.splitSimSeq/proteome_ath_longest.ss.tsv
+$portho_location/porthomclBlastParser $sample_name/3.blastres/$strand.tab $sample_name/1.compliantFasta >> $sample_name/4.splitSimSeq/$strand.ss.tsv
 
 #5
 mkdir $sample_name/5.paralogTemp
@@ -61,4 +64,4 @@ cat $sample_name/7.paralogs/*.tsv >> $sample_name/8.all.par.tsv
 mcl $sample_name/8.all.par.tsv  --abc -I $inflation -t 4 -o $sample_name/8.all.par.group
 
 # add orphans
-python /groups/itay_mayrose/galtoledano/gene_families/scripts/add_orphans.py $sample_name/0.input_faa/*.faa $sample_name/8.all.par.group
+python /groups/itay_mayrose/galtoledano/gene_families/scripts/add_orphans.py $sample_name/0.input_faa/$strand.faa $sample_name/8.all.par.group
