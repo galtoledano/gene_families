@@ -18,7 +18,7 @@ def manipulate_results(hmmer_results, e_value_threshold):
     return grouped_df
 
 
-def find_orphans(original_fasta_file, orphans_file, grouped_df):
+def find_orphans(original_fasta_file, results_path, grouped_df):
     orphans = []
     for _ , row in grouped_df.iterrows():
         proteins = row['Proteins']
@@ -28,33 +28,31 @@ def find_orphans(original_fasta_file, orphans_file, grouped_df):
     none_group_ids = grouped_df.loc[grouped_df['Profile'] == 'none', 'Proteins'].tolist()[0]
     none_group_ids.extend(orphans)
 
-    with open(original_fasta_file, 'r') as original_fasta, open(orphans_file, 'w') as output_fasta:
+    with open(original_fasta_file, 'r') as original_fasta, open(f"{results_path}/orphans.faa", 'w') as output_fasta:
         for record in SeqIO.parse(original_fasta, 'fasta'):
             if record.id in none_group_ids:
                 SeqIO.write(record, output_fasta, 'fasta')
     return none_group_ids
 
 
-def handle_results(hmmer_results, original_fasta_file, orphans_file, output_csv_file, e_value_threshold=0.01):
+def handle_results(hmmer_results, original_fasta_file, results_path, e_value_threshold=0.01):
     # Extract the target, query, and E-value columns from an --tblout hmmscan file
     grouped_df = manipulate_results(hmmer_results, e_value_threshold)
 
-    none_group_ids = find_orphans(original_fasta_file, orphans_file, grouped_df)
+    none_group_ids = find_orphans(original_fasta_file, results_path, grouped_df)
 
     gene_families = grouped_df[~grouped_df['Proteins'].apply(lambda x: any(item in none_group_ids for item in x))].reset_index()
     gene_families['families'] = gene_families['Proteins'].apply(lambda x: '\t'.join(map(str, x)))
-    gene_families['families'].to_csv(output_csv_file, index=False, sep=',', header=False)
+    gene_families['families'].to_csv(f"{results_path}\gene_families.tsv", index=False, sep=',', header=False)
 
 
 if __name__ == "__main__":
-    # hmmer_output='/groups/itay_mayrose/danielzak/gene_fams/test/results/AthNoVarsResults.txt'
+    # hmmer_output='/groups/itay_mayrose/danielz/gene_fams/test/results.txt'
     # original_fasta_file='/groups/itay_mayrose/danielzak/gene_fams/genomes/AthNoVars.fa'
-    # orphan='hmm_profile/orphans.fa'
-    # output_path='hmm_profile/gene_families.csv'
+    # e_value_threshold=0.01
     hmmer_output=sys.argv[1]
     original_fasta_file=sys.argv[2]
-    orphan=sys.argv[3]
-    output_path=sys.argv[4]
-    e_value_threshold=sys.argv[5]
+    results_path=sys.argv[3]
+    e_value_threshold=sys.argv[4]
 
-    handle_results(hmmer_output, original_fasta_file, orphan, output_path, e_value_threshold)
+    handle_results(hmmer_output, original_fasta_file, results_path, e_value_threshold)

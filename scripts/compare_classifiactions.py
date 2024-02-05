@@ -39,14 +39,16 @@ def compare_families(file1, file2):
 
     average_similarity = total_similarity / len(gene_families_1) if gene_families_1 else 0
     weighted_average_similarity = total_weighted_similarity / total_weights if total_weights != 0 else 0
+    perfect = perfect_match / len(gene_families_1) if gene_families_1 else 0
+    print(f"Average Jaccard Similarity: {round(average_similarity, 3)}")
+    print(f"Weighted Average Jaccard Similarity: {round(weighted_average_similarity, 3)}")
+    print(f"% of Groups that Perfectly Matched {round(perfect, 3)}")
+    return average_similarity, weighted_average_similarity, perfect
 
-    print(f"Average Jaccard Similarity: {average_similarity}")
-    print(f"Weighted Average Jaccard Similarity: {weighted_average_similarity}")
-    print(f"% of Groups that Perfectly Matched {perfect_match / len(gene_families_1) if gene_families_1 else 0}")
-
+def main(f1, f2):
+    file1 = prep_files(f1)
+    file2 = prep_files(f2)
+    return compare_families(file1, file2)
 
 if __name__ == '__main__':
-    file1 = prep_files(sys.argv[1])
-    file2 = prep_files(sys.argv[2])
-    compare_families(file1, file2)
-
+    main(sys.argv[1], sys.argv[2])

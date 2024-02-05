@@ -6,8 +6,11 @@
 # # 1. Path to the folder with PorthoMCL code.
 # # 2. Path to the input, the sample on which we want to run the pipeline. This is a directory that contains a subdirectory named "0.input_faa" with the input FASTA file inside.
 # # 3. Inflation parameter for creating clusters with the MCL algorithm.
-# # To run this script, use:
+# # To run this script, you need to create the conda enviorment with the command:
+# # conda env create -f /groups/itay_mayrose/galtoledano/gene_families/data/porthomcl.yaml
+# # and then use:
 # # bash porthomcl.sh <PATH_TO_PORTHOMCL> <PATH_TO_SAMPLE> <INFLATION>
+
 
 portho_location=$1
 sample_name=$2
@@ -15,20 +18,20 @@ inflation=$3
 cpus=16
 
 strand=$(basename $sample_name/0.input_faa/*)
-strand="${strand%.*}" #
+strand="${strand%.*}" 
 
 #1-2
 $portho_location/porthomcl.sh -e 2 $sample_name
 
 #3
-makeblastdb -in $sample_name/2.filteredFasta/goodProteins.fasta  -dbtype prot
+makeblastdb -in $sample_name/2.filteredFasta/goodProteins.fasta -dbtype prot
 mkdir $sample_name/3.blastdb
 mv $sample_name/2.filteredFasta/goodProteins.fasta.* $sample_name/3.blastdb/
 mkdir $sample_name/3.blastquery 
 $portho_location/porthomclSplitFasta.py -i $sample_name/2.filteredFasta/goodProteins.fasta  -o $sample_name/3.blastquery 
 cd $sample_name
-mkdir 3.blastres 
-blastp -query 3.blastquery/*.fasta -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000 -evalue 1e-5 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen" -num_threads $cpus -out 3.blastres/$strand.tab
+mkdir 3.blastres
+blastp -query 3.blastquery/$strand.fasta -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000 -evalue 1e-5 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen slen" -num_threads $cpus -out 3.blastres/$strand.tab
 cd ../..
 
 #normalize_score
