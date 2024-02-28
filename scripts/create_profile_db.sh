@@ -2,9 +2,8 @@
 # # This code create and press profiles database
 
 #Create Profile DB
-# parent_directory="/groups/itay_mayrose/danielz/gene_fams/ProfilesUpdated/updProfiles/"
 parent_directory=$1
-output_file="$parent_directory/data_base_profile.hmm"
+output_file="/groups/itay_mayrose/danielzak/gene_fams/ProfilesUpdated/data_base_profile.hmm" # todo: add as paramter
 
 # Change to the parent directory
 cd "$parent_directory" || exit

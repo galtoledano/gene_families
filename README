@@ -1,1 +1,49 @@
+species:
+ath - Arabidopsis thaliana
+gma - Glycine max
+han - Helianthus annuus
+nta - Nicotiana tabacum
+oeu - Olea europaea
+osa - Oryza sativa ssp. japonica
+sly - Solanum lycopersicum
 
+martquery_0215145338_501.txt.gz - Mouse
+martquery_0215145549_816.txt.gz - Zebrafish
+martquery_0215145656_414.txt.gz - Caenorhabditis elegans
+martquery_0215154453_673.txt.gz - Human
+martquery_0228120036_931.txt.gz - Cow
+martquery_0228120505_848.txt.gz - Chimpanzee
+martquery_0228120844_690.txt.gz - Pig (Sscrofa11.1)
+martquery_0228121042_398.txt.gz - Dog
+
+
+
+/groups/itay_mayrose/danielzak/duplication_modes/WGD/filesMCScanX/
+working on ath
+Average Jaccard Similarity: 0.504
+Weighted Average Jaccard Similarity: 0.533
+% of Groups that Perfectly Matched 0.0
+working on gma
+Average Jaccard Similarity: 0.66
+Weighted Average Jaccard Similarity: 0.583
+% of Groups that Perfectly Matched 0.333
+working on han
+Average Jaccard Similarity: 0.0
+Weighted Average Jaccard Similarity: 0.0
+% of Groups that Perfectly Matched 0.0
+working on nta
+Average Jaccard Similarity: 0.544
+Weighted Average Jaccard Similarity: 0.547
+% of Groups that Perfectly Matched 0.152
+working on oeu
+Average Jaccard Similarity: 0.0
+Weighted Average Jaccard Similarity: 0.0
+% of Groups that Perfectly Matched 0.0
+working on osa
+Average Jaccard Similarity: 0.0
+Weighted Average Jaccard Similarity: 0.0
+% of Groups that Perfectly Matched 0.0
+working on sly
+Average Jaccard Similarity: 0.765
+Weighted Average Jaccard Similarity: 0.604
+% of Groups that Perfectly Matched 0.536

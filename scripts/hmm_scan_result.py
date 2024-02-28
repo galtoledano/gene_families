@@ -1,3 +1,4 @@
+import os
 import sys
 import pandas as pd
 from Bio import SeqIO
@@ -28,7 +29,7 @@ def find_orphans(original_fasta_file, results_path, grouped_df):
     none_group_ids = grouped_df.loc[grouped_df['Profile'] == 'none', 'Proteins'].tolist()[0]
     none_group_ids.extend(orphans)
 
-    with open(original_fasta_file, 'r') as original_fasta, open(f"{results_path}/orphans.faa", 'w') as output_fasta:
+    with open(original_fasta_file, 'r') as original_fasta, open(f"{results_path}{os.sep}orphans.faa", 'w') as output_fasta:
         for record in SeqIO.parse(original_fasta, 'fasta'):
             if record.id in none_group_ids:
                 SeqIO.write(record, output_fasta, 'fasta')
@@ -38,21 +39,25 @@ def find_orphans(original_fasta_file, results_path, grouped_df):
 def handle_results(hmmer_results, original_fasta_file, results_path, e_value_threshold=0.01):
     # Extract the target, query, and E-value columns from an --tblout hmmscan file
     grouped_df = manipulate_results(hmmer_results, e_value_threshold)
-
     none_group_ids = find_orphans(original_fasta_file, results_path, grouped_df)
-
     gene_families = grouped_df[~grouped_df['Proteins'].apply(lambda x: any(item in none_group_ids for item in x))].reset_index()
     gene_families['families'] = gene_families['Proteins'].apply(lambda x: '\t'.join(map(str, x)))
-    gene_families['families'].to_csv(f"{results_path}\gene_families.tsv", index=False, sep=',', header=False)
+    print(f"{results_path}{os.sep}gene_families.tsv")
+    gene_families['families'].to_csv(f"{results_path}{os.sep}gene_families.tsv", index=False, sep=',', header=False)
 
 
 if __name__ == "__main__":
     # hmmer_output='/groups/itay_mayrose/danielz/gene_fams/test/results.txt'
     # original_fasta_file='/groups/itay_mayrose/danielzak/gene_fams/genomes/AthNoVars.fa'
     # e_value_threshold=0.01
-    hmmer_output=sys.argv[1]
-    original_fasta_file=sys.argv[2]
-    results_path=sys.argv[3]
-    e_value_threshold=sys.argv[4]
+    # hmmer_output=sys.argv[1]
+    # original_fasta_file=sys.argv[2]
+    # results_path=sys.argv[3]
+    # e_value_threshold=float(sys.argv[4])
+
+    hmmer_output="/groups/itay_mayrose/danielzak/gene_fams/test/results.txt"
+    original_fasta_file="/groups/itay_mayrose/galtoledano/gene_families/data/genomes/ensmble/sly.fa"
+    results_path="hmm_profile/sly"
+    e_value_threshold=0.01
 
     handle_results(hmmer_output, original_fasta_file, results_path, e_value_threshold)

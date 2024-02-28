@@ -51,4 +51,5 @@ def main(f1, f2):
     return compare_families(file1, file2)
 
 if __name__ == '__main__':
+    # main("hmm_profile/sly/full_set_gene_families.tsv", "data/ensmle_families/sly_families.tsv")
     main(sys.argv[1], sys.argv[2])
